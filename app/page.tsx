@@ -1,70 +1,63 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight, BadgeCheck, CalendarDays, Check, Globe2, HeartHandshake, MapPin, Menu, Scissors, ShieldCheck, Sparkles, Users, Wallet, X } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowRight, BadgeCheck, BriefcaseBusiness, Building2, CarFront, CheckCircle2, Globe2, House, Search, ShieldCheck, ShoppingBag, ShoppingBasket, Truck, Wrench } from "lucide-react";
+import { marketplaceCategories } from "@/data/marketplace-categories";
 
-const categories = [
-  ["Men's grooming", "Haircuts, beard shaping, shaving and styling", "✂️"],
-  ["Women's beauty", "Hair styling, facials, makeup and beauty care", "🌸"],
-  ["Hair & skin care", "Hair spa, colouring and cleansing", "✨"],
-  ["Massage & wellness", "Qualified head, foot and body massage", "💆"],
-  ["Wedding & events", "Bridal, party and celebration grooming", "💍"],
-  ["Family & senior care", "Convenient grooming for the whole family", "🏡"],
+const groups = [
+  { title: "Home repairs & maintenance", icon: Wrench, description: "Get trusted help for the jobs that keep your home running." },
+  { title: "Groceries & quick delivery", icon: ShoppingBasket, description: "Everyday essentials and local-store delivery, subject to area coverage." },
+  { title: "Shopping & e-commerce", icon: ShoppingBag, description: "Discover products from local merchants and online sellers." },
+  { title: "Rides & mobility", icon: CarFront, description: "Request rides and local transport from eligible licensed partners." },
+  { title: "Property & real estate", icon: Building2, description: "Explore rentals, property sales, agents and maintenance." },
+  { title: "Construction & projects", icon: BriefcaseBusiness, description: "Find contractors, specialists, materials and project support." },
 ];
 
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [photo, setPhoto] = useState("");
-  const [photoName, setPhotoName] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [country, setCountry] = useState("");
-  const [city, setCity] = useState("");
-  const [phone, setPhone] = useState("");
-  const [category, setCategory] = useState("Barber / men's grooming");
-
-  function submit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!photo) { alert("Please select a profile photograph."); return; }
-    setSubmitted(true);
-  }
+  const [search, setSearch] = useState("");
+  const [activeGroup, setActiveGroup] = useState("All");
+  const filtered = useMemo(() => marketplaceCategories.filter((item) => {
+    const matchesSearch = (item.name + " " + item.description + " " + item.group).toLowerCase().includes(search.toLowerCase());
+    return matchesSearch && (activeGroup === "All" || item.group === activeGroup);
+  }), [search, activeGroup]);
+  const groupNames = ["All", ...Array.from(new Set(marketplaceCategories.map((item) => item.group)))];
 
   return <main>
     <header className="topbar">
-      <a className="brand" href="#"><span className="brand-mark"><Scissors size={21}/></span><span>beauty<span className="brand-accent">doorstep</span><small>CARE THAT COMES TO YOU</small></span></a>
-      <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">{menuOpen ? <X/> : <Menu/>}</button>
-      <nav className={menuOpen ? "nav nav-open" : "nav"}>
-        <a href="#services" onClick={() => setMenuOpen(false)}>Services</a><a href="#how" onClick={() => setMenuOpen(false)}>How it works</a><a href="#safety" onClick={() => setMenuOpen(false)}>Safety</a><a href="#join" onClick={() => setMenuOpen(false)}>Join as a professional</a><a className="nav-cta" href="#join">Get started <ArrowRight size={16}/></a>
-      </nav>
+      <a className="brand" href="#"><span className="brand-mark">B</span><span>beauty<span className="brand-accent">doorstep</span><small>ONE MARKETPLACE. EVERYDAY NEEDS.</small></span></a>
+      <nav className="nav"><a href="#explore">Explore</a><a href="#how">How it works</a><a href="#safety">Trust & safety</a><a href="#partners">Become a partner</a><a className="nav-cta" href="#explore">Explore marketplace <ArrowRight size={16}/></a></nav>
     </header>
 
     <section className="hero">
       <div className="hero-copy">
-        <div className="eyebrow"><Globe2 size={15}/> PERSONAL CARE, WORLDWIDE</div>
-        <h1>Your favourite care.<br/><em>At your doorstep.</em></h1>
-        <p>Book barbers and beauty professionals who come to your home, hotel or workplace. Your time, your space, your style.</p>
-        <div className="hero-actions"><a className="button button-dark" href="#services">Explore services <ArrowRight size={17}/></a><a className="text-link" href="#join">I’m a professional <ArrowRight size={16}/></a></div>
-        <div className="trust-line"><span><ShieldCheck size={17}/> Verification-first</span><span><Users size={17}/> Inclusive choices</span><span><HeartHandshake size={17}/> Customer care</span></div>
+        <div className="eyebrow"><Globe2 size={15}/> A GLOBAL DOORSTEP MARKETPLACE</div>
+        <h1>Whatever you need.<br/><em>Right to your door.</em></h1>
+        <p>From a quick ride or grocery delivery to a leaking tap, a home renovation, a new sofa or a property search — discover products, people and services in one place.</p>
+        <div className="hero-actions"><a className="button button-dark" href="#explore">Explore all categories <ArrowRight size={17}/></a><a className="text-link" href="#partners">List your business <ArrowRight size={16}/></a></div>
+        <div className="trust-line"><span><ShieldCheck size={17}/> Trust-led onboarding</span><span><Globe2 size={17}/> Country-aware services</span><span><BadgeCheck size={17}/> Reviewed providers</span></div>
       </div>
-      <div className="hero-art"><div className="hero-photo"><div className="photo-overlay"><span>YOUR PERSONAL GROOMING EXPERIENCE</span><strong>Good care.<br/>Great confidence.</strong></div></div><div className="floating-note"><span className="note-icon"><BadgeCheck size={20}/></span><span><b>Reviewed professionals</b><small>Identity checks before approval</small></span></div><div className="hero-stamp"><Sparkles size={20}/><span>CARE<br/>WITHOUT<br/>THE COMMUTE</span></div></div>
+      <div className="hero-art"><div className="hero-photo"><div className="photo-overlay"><span>YOUR CITY. YOUR EVERYDAY NEEDS.</span><strong>One doorstep.<br/>A world of help.</strong></div></div><div className="floating-note"><span className="note-icon"><CheckCircle2 size={20}/></span><span><b>One connected marketplace</b><small>Services · Shopping · Mobility · Projects</small></span></div><div className="hero-stamp"><Globe2 size={20}/><span>LOCAL<br/>PEOPLE<br/>GLOBAL REACH</span></div></div>
     </section>
 
-    <section className="quick-strip"><div><ShieldCheck/><span><b>Safety-led</b><small>Identity and profile review</small></span></div><div><CalendarDays/><span><b>On your schedule</b><small>Choose a convenient time</small></span></div><div><MapPin/><span><b>At your location</b><small>Home, hotel or workplace</small></span></div><div><Wallet/><span><b>Clear pricing</b><small>See costs before confirming</small></span></div></section>
+    <section className="quick-strip"><div><ShieldCheck/><span><b>Safer by design</b><small>Reviews and approval controls</small></span></div><div><Truck/><span><b>Flexible fulfilment</b><small>Pickup, delivery or home visit</small></span></div><div><House/><span><b>At your doorstep</b><small>Where local partners operate</small></span></div><div><Globe2/><span><b>Built to expand</b><small>Country and city availability</small></span></div></section>
 
-    <section className="section" id="services"><div className="section-heading"><div><div className="eyebrow">THE CARE YOU NEED</div><h2>More than a haircut.</h2></div><p>From everyday grooming to special occasions, discover services delivered by professionals with appropriate skills.</p></div><div className="service-grid">{categories.map(([title, desc, emoji]) => <article className="service-card" key={title}><div className="service-emoji">{emoji}</div><h3>{title}</h3><p>{desc}</p><a href="#join">Explore category <ArrowRight size={15}/></a></article>)}</div><p className="fine-print">Availability depends on location, local regulations and verified qualifications. Massage and specialist treatments require appropriately trained providers.</p></section>
+    <section className="section" id="explore">
+      <div className="section-heading"><div><div className="eyebrow">ONE PLACE FOR EVERYDAY LIFE</div><h2>What can we help you with?</h2></div><p>Search across home services, repairs, shopping, transport, property and professional work. Categories appear as they become available in your area.</p></div>
+      <div className="search-bar"><Search size={19}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Try plumbing, groceries, bike taxi, furniture, property..." aria-label="Search marketplace categories"/></div>
+      <div className="group-grid">{groups.map(({title,icon:Icon,description})=><a className="group-card" href="#categories" key={title}><span className="group-icon"><Icon size={22}/></span><span><b>{title}</b><small>{description}</small></span><ArrowRight size={17}/></a>)}</div>
+      <div className="category-head" id="categories"><div><div className="eyebrow">DISCOVER THE MARKETPLACE</div><h3>Explore categories</h3></div><span className="category-count">{filtered.length} categories</span></div>
+      <div className="filter-row">{groupNames.map(name=><button className={activeGroup===name?"filter active":"filter"} key={name} onClick={()=>setActiveGroup(name)}>{name}</button>)}</div>
+      <div className="category-grid">{filtered.map(item=><article className="category-card" key={item.slug}><div className="category-card-top"><span>{item.group}</span>{item.regulated&&<span className="regulated">Local checks</span>}</div><h3>{item.name}</h3><p>{item.description}</p><div className="category-bottom"><span className={"wave "+item.launchWave}>{item.launchWave==="foundation"?"Foundation":item.launchWave==="next"?"Next phase":"Future phase"}</span><span className="category-arrow"><ArrowRight size={15}/></span></div></article>)}</div>
+      {filtered.length===0&&<p className="empty-state">No category matches that search. Try another word or choose “All”.</p>}
+      <p className="fine-print">These are planned marketplace categories, not a claim that every service is currently available. Availability depends on local partners, infrastructure, safety, licensing and law.</p>
+    </section>
 
-    <section className="how-section" id="how"><div className="section narrow"><div className="eyebrow light">SIMPLE FROM START TO FINISH</div><h2>Care in four easy steps.</h2><div className="steps"><div><span>01</span><h3>Choose your service</h3><p>Browse by service, location, availability and preferences.</p></div><div><span>02</span><h3>Meet your match</h3><p>Review the professional’s profile, skills and review status.</p></div><div><span>03</span><h3>Welcome your pro</h3><p>Follow booking updates and share the appointment with someone you trust.</p></div><div><span>04</span><h3>Enjoy and review</h3><p>Confirm completion and share an honest review.</p></div></div></div></section>
+    <section className="how-section" id="how"><div className="section narrow"><div className="eyebrow light">ONE ACCOUNT. MANY POSSIBILITIES.</div><h2>One simple way to get things done.</h2><div className="steps"><div><span>01</span><h3>Choose what you need</h3><p>Search for a product, service, ride, delivery, property or project partner.</p></div><div><span>02</span><h3>Compare local options</h3><p>Review provider profiles, seller details, service scope, price and availability.</p></div><div><span>03</span><h3>Book, buy or request</h3><p>Choose home visit, pickup, delivery, scheduled work or a project quotation.</p></div><div><span>04</span><h3>Track and complete</h3><p>Follow order or booking updates and use support if something goes wrong.</p></div></div></div></section>
 
-    <section className="section safety-section" id="safety"><div className="safety-copy"><div className="eyebrow">TRUST IS EARNED</div><h2>Professional standards.<br/><em>Personal peace of mind.</em></h2><p>BeautyDoorstep is being designed around identity checks, transparent profiles and safety at every stage of a booking.</p><ul><li><Check/> Identity and document review before approval</li><li><Check/> Professional ID only after admin approval</li><li><Check/> Booking check-in and completion confirmation</li><li><Check/> Consent-based location sharing during active jobs</li><li><Check/> Reporting and support workflows</li></ul></div><div className="safety-card"><div className="shield-art"><ShieldCheck size={58}/></div><h3>Verified means reviewed.</h3><p>Submitting an application does not automatically approve a professional or create a licence or proof of identity.</p><div className="status-row"><span className="status-dot"/><b>Approval required before bookings</b></div></div></section>
+    <section className="section safety-section" id="safety"><div className="safety-copy"><div className="eyebrow">RESPONSIBLE GROWTH</div><h2>Convenience with<br/><em>trust built in.</em></h2><p>Different services need different safeguards. A grocery seller, electrician, taxi driver, real-estate agent and healthcare professional should not all pass through the same approval checklist.</p><ul><li><CheckCircle2/> Identity and business checks appropriate to the role</li><li><CheckCircle2/> Extra licence and qualification checks for regulated work</li><li><CheckCircle2/> Private handling of identity documents</li><li><CheckCircle2/> Location sharing only with clear consent and purpose</li><li><CheckCircle2/> Transparent quotes, cancellation and dispute processes</li><li><CheckCircle2/> Country-by-country launch and compliance controls</li></ul></div><div className="safety-card"><div className="shield-art"><ShieldCheck size={58}/></div><h3>Not every service launches everywhere.</h3><p>Categories can be visible in the platform catalogue while ordering stays disabled until the country, city, provider, insurance, payments and legal requirements are ready.</p><div className="status-row"><span className="status-dot"/><b>Availability is checked by location and service</b></div></div></section>
 
-    <section className="join-section" id="join"><div className="section join-layout"><div className="join-intro"><div className="eyebrow light">GROW YOUR CAREER</div><h2>Bring your skills.<br/><em>Build your future.</em></h2><p>Join a growing network of grooming and beauty professionals. Share your experience and apply to offer services in your area.</p><div className="join-benefits"><span><Check/> Build your professional profile</span><span><Check/> Set your service area and availability</span><span><Check/> Receive booking opportunities after approval</span></div><div className="note-box"><ShieldCheck/><span><b>Your information deserves protection.</b><small>Government ID documents must be collected through a secure private process in a later phase. Do not submit identity numbers here.</small></span></div></div>
-    <div className="application-panel"><div className="form-title"><div><div className="eyebrow">PROFESSIONAL NETWORK</div><h3>Start your application</h3></div><span className="step-label">APPLICATION · DEMO</span></div>
-    {submitted ? <div className="application-result"><div className="success-icon"><Check/></div><h3>Preview created, {name}!</h3><p>This is only a local demonstration. Your application has not been sent or saved.</p><div className="id-card"><div className="id-card-top"><span>BEAUTYDOORSTEP</span><small>APPLICATION PREVIEW</small></div><div className="id-card-body"><div className="id-photo">{photo && <img src={photo} alt="Profile preview"/>}</div><div className="id-info"><b>{name}</b><span>{category}</span><small>{city}, {country}</small></div></div><div className="id-card-bottom"><span>DEMO ONLY · NOT AN OFFICIAL ID</span><b className="pending-pill">PENDING REVIEW</b></div></div><p className="id-warning">No professional ID or booking access is issued until secure checks and administrator approval are completed.</p><button className="button button-outline" onClick={() => setSubmitted(false)}>Edit application</button></div> : <form onSubmit={submit}>
-      <label className="photo-upload"><span className="photo-circle">{photo ? <img src={photo} alt="Selected profile"/> : <Users/>}</span><span><b>{photoName || "Add a profile photograph"}</b><small>Image only · Maximum 5 MB · Preview stays on this device</small></span><input type="file" accept="image/*" onChange={e => {const f=e.target.files?.[0]; if(!f)return; if(f.size>5*1024*1024){alert("Choose an image under 5 MB.");return;} const reader=new FileReader(); reader.onload=()=>setPhoto(String(reader.result||"")); reader.readAsDataURL(f); setPhotoName(f.name);}} required={!photo}/></label>
-      <div className="form-grid"><label>Full name<input required value={name} onChange={e=>setName(e.target.value)} placeholder="Your name"/></label><label>Email address<input required type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com"/></label><label>Phone number<input required value={phone} onChange={e=>setPhone(e.target.value)} placeholder="Include country code"/></label><label>Country<input required value={country} onChange={e=>setCountry(e.target.value)} placeholder="Country"/></label><label>City / service area<input required value={city} onChange={e=>setCity(e.target.value)} placeholder="City"/></label><label>Professional category<select value={category} onChange={e=>setCategory(e.target.value)}><option>Barber / men&apos;s grooming</option><option>Women&apos;s beauty</option><option>Hair &amp; skin care</option><option>Massage &amp; wellness</option><option>Wedding &amp; events</option><option>Other</option></select></label></div>
-      <p className="form-disclaimer">By continuing, you confirm that the details are yours and agree to be contacted about this demo application. This form does not transmit data. A real application flow will include a privacy notice and secure document process.</p><button className="button button-dark submit-button" type="submit">Preview my application <ArrowRight size={16}/></button>
-    </form>}</div></div></section>
-    <footer><div className="footer-brand"><a className="brand" href="#"><span className="brand-mark"><Scissors size={20}/></span><span>beauty<span className="brand-accent">doorstep</span><small>CARE THAT COMES TO YOU</small></span></a><p>Professional care, delivered with consideration.</p></div><div className="footer-links"><a href="#services">Services</a><a href="#safety">Safety</a><a href="#join">Become a professional</a></div><small>© {new Date().getFullYear()} BeautyDoorstep. Availability and features will vary by country. This preview is not a live booking service.</small></footer>
+    <section className="join-section" id="partners"><div className="section join-layout"><div className="join-intro"><div className="eyebrow light">GROW WITH THE MARKETPLACE</div><h2>Bring your business.<br/><em>Reach more people.</em></h2><p>We plan to welcome skilled professionals, retailers, delivery partners, drivers, property specialists, contractors, project teams and local businesses.</p><div className="join-benefits"><span><CheckCircle2/> Create a business or professional profile</span><span><CheckCircle2/> List services, products or project capabilities</span><span><CheckCircle2/> Manage availability and service locations</span><span><CheckCircle2/> Receive requests after approval and launch</span></div></div><div className="application-panel"><div className="eyebrow">PARTNER NETWORK</div><h3>Partner registration is coming in the next build phase.</h3><p>We are preparing secure customer accounts, partner onboarding, admin review and the marketplace database before accepting real applications.</p><a className="button button-dark" href="https://github.com/allcompaniesubp/Beautyatdoorsteps">View project progress <ArrowRight size={16}/></a><p className="form-disclaimer">Please do not email identity documents or share passwords, bank details or government ID numbers through this preview.</p></div></div></section>
+
+    <footer><div className="footer-brand"><a className="brand" href="#"><span className="brand-mark">B</span><span>beauty<span className="brand-accent">doorstep</span><small>ONE MARKETPLACE. EVERYDAY NEEDS.</small></span></a><p>Local services, products and people — connected at your doorstep.</p></div><div className="footer-links"><a href="#explore">Explore</a><a href="#safety">Trust & safety</a><a href="#partners">Partner with us</a></div><small>© {new Date().getFullYear()} BeautyDoorstep. Planned categories and availability vary by country and city. This is an early product preview, not a live ordering, transport or property service.</small></footer>
   </main>;
 }
