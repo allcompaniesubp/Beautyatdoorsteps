@@ -9,7 +9,7 @@ export default function PrivacyPage() {
     <h2>Private documents</h2><p>Identity and professional documents must be stored in private, access-controlled storage with limited staff access, audit logs, retention limits and secure deletion. They must never be placed in public profile fields or public URLs.</p>
     <h2>Health and legal information</h2><p>Any future healthcare or legal feature requires separate notices, strict access controls and purpose limitation. Sensitive information must not be used for advertising or sold as leads.</p>
     <h2>Location</h2><p>Precise location should be requested only when needed, with clear consent, and live sharing should automatically stop when the active booking or trip ends.</p>
-    <h2>Contact and full framework</h2><p>The operating entity's privacy contact and applicable rights process must be inserted after legal review. The detailed privacy framework is maintained in project documentation.</p>
+    <h2>Contact and full framework</h2><p>The operating entity's privacy contact and applicable rights process must be inserted after legal review. <a href="https://github.com/allcompaniesubp/Beautyatdoorsteps/blob/main/docs/PRIVACY_AND_DATA_PROTECTION_FRAMEWORK.md">Read the full privacy and data-protection framework draft</a>.</p>
     <p><Link href="/">Return to marketplace</Link></p>
   </main>;
 }
