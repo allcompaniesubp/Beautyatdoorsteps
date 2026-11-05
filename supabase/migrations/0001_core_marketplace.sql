@@ -34,6 +34,8 @@ create table public.marketplace_categories (
   regulated boolean not null default false,
   launch_wave text not null default 'later' check (launch_wave in ('foundation','next','later')),
   enabled boolean not null default false,
+  catalogue_visible boolean not null default true,
+  ordering_enabled boolean not null default false,
   created_at timestamptz not null default now()
 );
 
@@ -205,6 +207,44 @@ create table public.audit_events (
   created_at timestamptz not null default now()
 );
 
+-- Seed the extensible global catalogue. Visibility does not mean ordering is live.
+insert into public.marketplace_categories
+  (slug, name, vertical, description, regulated, launch_wave, enabled, catalogue_visible, ordering_enabled)
+values
+  ('beauty-personal-care','Beauty & personal care','Personal care','Barbers, salons, makeup, nails, skincare and qualified wellness professionals.',false,'foundation',false,true,false),
+  ('home-cleaning','Home & office cleaning','Home services','Housekeeping, deep cleaning, laundry, pest control and sanitation.',false,'foundation',false,true,false),
+  ('plumbing','Plumbing & water systems','Repairs & maintenance','Leaks, taps, pipes, drains, pumps, tanks and installations.',false,'foundation',false,true,false),
+  ('electrical','Electrical work','Repairs & maintenance','Wiring, lighting, switches, fans, inverters and electrical troubleshooting.',true,'foundation',false,true,false),
+  ('appliance-repair','Appliance & electronics repair','Repairs & maintenance','AC, refrigerator, washing machine, television, computer and device repair.',false,'foundation',false,true,false),
+  ('handyman-carpentry','Handyman & carpentry','Repairs & maintenance','Furniture assembly, doors, locks, fixtures, shelves and general repairs.',false,'foundation',false,true,false),
+  ('painting-interiors','Painting & interiors','Building & projects','Painting, flooring, ceilings, wallpaper, modular fittings and interiors.',false,'next',false,true,false),
+  ('construction-renovation','Construction & renovation','Building & projects','Civil works, renovations, structural projects and licensed contractors.',true,'later',false,true,false),
+  ('building-materials','Building materials & equipment','Shopping & supplies','Cement, steel, timber, tools, sanitaryware, electrical and plumbing supplies.',false,'next',false,true,false),
+  ('groceries-essentials','Groceries & daily essentials','Quick commerce','Fresh produce, staples, dairy, snacks, beverages and household essentials.',false,'next',false,true,false),
+  ('food-restaurants','Food, restaurants & catering','Quick commerce','Meals, bakery, catering, meal prep and local food businesses.',false,'later',false,true,false),
+  ('pharmacy-health','Pharmacy & health essentials','Shopping & supplies','Permitted pharmacy and wellness products from authorised sellers.',true,'later',false,true,false),
+  ('general-ecommerce','General online shopping','E-commerce','Clothing, footwear, electronics, books, furniture, homeware and more.',false,'next',false,true,false),
+  ('local-store-shopping','Shop local & same-day delivery','E-commerce','Discover nearby stores, compare products and arrange pickup or delivery.',false,'next',false,true,false),
+  ('courier-parcel','Courier, parcel & errands','Delivery & logistics','Document delivery, parcel pickup, shopping errands and business deliveries.',false,'next',false,true,false),
+  ('bike-taxi-rides','Bike taxi, rides & taxis','Mobility','Licensed two-wheeler, car, taxi and accessible ride services where permitted.',true,'later',false,true,false),
+  ('vehicle-services','Vehicle repair & roadside help','Mobility','Mechanics, tyre repair, towing, car wash, servicing and EV support.',false,'next',false,true,false),
+  ('moving-logistics','Moving, freight & logistics','Delivery & logistics','Packers, movers, storage, cargo, furniture delivery and business logistics.',false,'later',false,true,false),
+  ('real-estate','Real estate & rentals','Property','Property discovery, rentals, sales, agents, inspections and property management.',true,'later',false,true,false),
+  ('property-maintenance','Property maintenance & management','Property','Caretaking, inspections, repairs, cleaning and facility management.',false,'next',false,true,false),
+  ('professional-projects','Professional & project work','Business & projects','Architecture, design, engineering, IT, consulting, procurement and project tenders.',true,'later',false,true,false),
+  ('education-tutoring','Education, tutors & training','Personal & professional','Home tuition, online learning, music, languages, coaching and skills training.',false,'later',false,true,false),
+  ('health-wellness','Healthcare & wellness','Personal & professional','Eligible care, fitness, yoga and wellness services from qualified professionals.',true,'later',false,true,false),
+  ('pet-care','Pet care & veterinary','Personal & professional','Pet grooming, sitting, walking and veterinary services where licensed.',true,'later',false,true,false),
+  ('events-hospitality','Events, travel & hospitality','Personal & professional','Photography, event support, hotels, tours, guides and travel services.',false,'later',false,true,false),
+  ('agriculture','Agriculture & farm supplies','Business & projects','Farm inputs, equipment, produce, livestock services and rural logistics.',true,'later',false,true,false),
+  ('wholesale-b2b','Wholesale & business supplies','Business & projects','Bulk buying, trade suppliers, office supplies and business procurement.',false,'later',false,true,false),
+  ('jobs-gigs','Jobs, gigs & local talent','Personal & professional','Local work opportunities, freelancers and verified specialist talent.',false,'later',false,true,false),
+  ('emergency-assistance','Emergency & urgent assistance','Special assistance','Urgent non-emergency repair dispatch and links to appropriate emergency services.',true,'later',false,true,false)
+on conflict (slug) do update set
+  name = excluded.name, vertical = excluded.vertical, description = excluded.description,
+  regulated = excluded.regulated, launch_wave = excluded.launch_wave,
+  catalogue_visible = excluded.catalogue_visible;
+
 -- Create a minimal profile when a Supabase Auth user is registered.
 create or replace function public.handle_new_user()
 returns trigger
@@ -299,7 +339,7 @@ create policy "profile update own" on public.profiles for update to authenticate
 create policy "read own roles" on public.user_roles for select to authenticated using (user_id = (select auth.uid()));
 
 -- Categories are public catalogue data; only enabled categories are exposed.
-create policy "read enabled categories" on public.marketplace_categories for select to anon, authenticated using (enabled = true);
+create policy "read enabled categories" on public.marketplace_categories for select to anon, authenticated using (catalogue_visible = true);
 
 -- Provider applications: owners may create and read their own; public may see approved providers only.
 create policy "provider read approved or own" on public.provider_profiles for select to anon, authenticated using (review_status = 'approved' or user_id = (select auth.uid()));
