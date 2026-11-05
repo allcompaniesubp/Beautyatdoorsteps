@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowRight, BadgeCheck, BriefcaseBusiness, Building2, CarFront, CheckCircle2, Globe2, House, Search, ShieldCheck, ShoppingBag, ShoppingBasket, Truck, Wrench } from "lucide-react";
+import { ArrowRight, BadgeCheck, BriefcaseBusiness, Building2, CarFront, CheckCircle2, Globe2, House, Search, ShieldCheck, ShoppingBag, ShoppingBasket, Truck, Wrench, Scale, Stethoscope, Landmark, Store } from "lucide-react";
 import { marketplaceCategories } from "@/data/marketplace-categories";
 
 const groups = [
@@ -11,6 +11,10 @@ const groups = [
   { title: "Rides & mobility", icon: CarFront, description: "Request rides and local transport from eligible licensed partners." },
   { title: "Property & real estate", icon: Building2, description: "Explore rentals, property sales, agents and maintenance." },
   { title: "Construction & projects", icon: BriefcaseBusiness, description: "Find contractors, specialists, materials and project support." },
+  { title: "Lawyers & legal information", icon: Scale, description: "Discover eligible legal professionals and official legal resources where permitted." },
+  { title: "Doctors & healthcare", icon: Stethoscope, description: "Find approved healthcare providers and teleconsultation services where enabled." },
+  { title: "Government & public services", icon: Landmark, description: "Find official portals, public schemes, civic services and government information." },
+  { title: "All businesses & local directory", icon: Store, description: "Discover shops, companies, offices, manufacturers and service providers." },
 ];
 
 export default function Home() {
@@ -42,8 +46,8 @@ export default function Home() {
     <section className="quick-strip"><div><ShieldCheck/><span><b>Safer by design</b><small>Reviews and approval controls</small></span></div><div><Truck/><span><b>Flexible fulfilment</b><small>Pickup, delivery or home visit</small></span></div><div><House/><span><b>At your doorstep</b><small>Where local partners operate</small></span></div><div><Globe2/><span><b>Built to expand</b><small>Country and city availability</small></span></div></section>
 
     <section className="section" id="explore">
-      <div className="section-heading"><div><div className="eyebrow">ONE PLACE FOR EVERYDAY LIFE</div><h2>What can we help you with?</h2></div><p>Search across home services, repairs, shopping, transport, property and professional work. Categories appear as they become available in your area.</p></div>
-      <div className="search-bar"><Search size={19}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Try plumbing, groceries, bike taxi, furniture, property..." aria-label="Search marketplace categories"/></div>
+      <div className="section-heading"><div><div className="eyebrow">ONE PLACE FOR EVERYDAY LIFE</div><h2>What can we help you with?</h2></div><p>Search across businesses, government information, legal and healthcare discovery, home services, repairs, shopping, transport, property and professional work. Categories appear as they become available in your area.</p></div>
+      <div className="search-bar"><Search size={19}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Try lawyer, doctor, government services, local shop, plumbing, groceries, taxi..." aria-label="Search marketplace categories"/></div>
       <div className="group-grid">{groups.map(({title,icon:Icon,description})=><a className="group-card" href="#categories" key={title}><span className="group-icon"><Icon size={22}/></span><span><b>{title}</b><small>{description}</small></span><ArrowRight size={17}/></a>)}</div>
       <div className="category-head" id="categories"><div><div className="eyebrow">DISCOVER THE MARKETPLACE</div><h3>Explore categories</h3></div><span className="category-count">{filtered.length} categories</span></div>
       <div className="filter-row">{groupNames.map(name=><button className={activeGroup===name?"filter active":"filter"} key={name} onClick={()=>setActiveGroup(name)}>{name}</button>)}</div>
@@ -58,6 +62,6 @@ export default function Home() {
 
     <section className="join-section" id="partners"><div className="section join-layout"><div className="join-intro"><div className="eyebrow light">GROW WITH THE MARKETPLACE</div><h2>Bring your business.<br/><em>Reach more people.</em></h2><p>We plan to welcome skilled professionals, retailers, delivery partners, drivers, property specialists, contractors, project teams and local businesses.</p><div className="join-benefits"><span><CheckCircle2/> Create a business or professional profile</span><span><CheckCircle2/> List services, products or project capabilities</span><span><CheckCircle2/> Manage availability and service locations</span><span><CheckCircle2/> Receive requests after approval and launch</span></div></div><div className="application-panel"><div className="eyebrow">PARTNER NETWORK</div><h3>Partner registration is coming in the next build phase.</h3><p>We are preparing secure customer accounts, partner onboarding, admin review and the marketplace database before accepting real applications.</p><a className="button button-dark" href="https://github.com/allcompaniesubp/Beautyatdoorsteps">View project progress <ArrowRight size={16}/></a><p className="form-disclaimer">Please do not email identity documents or share passwords, bank details or government ID numbers through this preview.</p></div></div></section>
 
-    <footer><div className="footer-brand"><a className="brand" href="#"><span className="brand-mark">B</span><span>beauty<span className="brand-accent">doorstep</span><small>ONE MARKETPLACE. EVERYDAY NEEDS.</small></span></a><p>Local services, products and people — connected at your doorstep.</p></div><div className="footer-links"><a href="#explore">Explore</a><a href="#safety">Trust & safety</a><a href="#partners">Partner with us</a></div><small>© {new Date().getFullYear()} BeautyDoorstep. Planned categories and availability vary by country and city. This is an early product preview, not a live ordering, transport or property service.</small></footer>
+    <footer><div className="footer-brand"><a className="brand" href="#"><span className="brand-mark">B</span><span>beauty<span className="brand-accent">doorstep</span><small>ONE MARKETPLACE. EVERYDAY NEEDS.</small></span></a><p>Local services, products and people — connected at your doorstep.</p></div><div className="footer-links"><a href="#explore">Explore</a><a href="#safety">Trust & safety</a><a href="#partners">Partner with us</a><a href="/terms">Terms of Use</a><a href="/privacy">Privacy information</a></div><small>© {new Date().getFullYear()} BeautyDoorstep. Planned categories and availability vary by country and city. This is an early product preview, not a live ordering, healthcare, legal, government, transport or property service.</small></footer>
   </main>;
 }
