@@ -1,6 +1,6 @@
-# BeautyDoorstep — starter project
+# DoorSphere — global marketplace preview
 
-A mobile-first Next.js starter for an international home grooming and beauty marketplace.
+A mobile-first Next.js starter for an global multi-category business, products and services marketplace.
 
 ## Included in this first preview
 
