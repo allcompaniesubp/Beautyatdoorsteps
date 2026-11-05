@@ -4,9 +4,9 @@ A mobile-first Next.js starter for an global multi-category business, products a
 
 ## Included in this first preview
 
-- Brand homepage and 51-category global directory/marketplace catalogue, including legal, healthcare, government-information, private-business and local-services discovery
+- Brand homepage and 81-category global directory/marketplace catalogue, including legal, healthcare, government-information, private-business and local-services discovery
 - Terms of Use and Privacy Information preview routes (`/terms` and `/privacy`), clearly marked as drafts
-- Draft customer terms, privacy framework, regulated-services register and global marketplace blueprint in `docs/`
+- Draft customer terms, privacy framework, regulated-services register, global marketplace blueprint and OpenAI + Grok AI gateway plan in `docs/`
 - Responsive customer-facing landing page
 - Professional application form
 - Local photo preview
@@ -46,3 +46,8 @@ Copy `.env.example` to `.env.local` only after creating a Supabase project. Neve
 ## Free/open-source-first approach
 
 Next.js, React, TypeScript, MapLibre GL JS, QR libraries and Supabase's open-source stack are candidates. Hosting, database, map tiles, email, SMS, WhatsApp, identity verification, payment processing and storage can have limits or fees. Check current terms and country availability before commercial use.
+
+
+## Optional AI providers
+
+See [`docs/AI_GATEWAY_OPENAI_XAI.md`](docs/AI_GATEWAY_OPENAI_XAI.md). The OpenAI + xAI (Grok) gateway is designed to remain disabled by default. No API keys are configured and no paid model calls are made. Provider credentials must be configured as server-only secrets after reviewing pricing, privacy and retention terms.
