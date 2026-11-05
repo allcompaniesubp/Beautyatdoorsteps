@@ -114,3 +114,12 @@ Drafts are not legal advice and must be reviewed by qualified counsel in each la
 ## Current implementation status
 
 The homepage and category registry are a product preview. The Supabase SQL migration is a proposed starting schema and has not been applied or tested against a live project. Authentication, business directory search backed by a database, online consultations, legal engagement, government API connections, booking, dispatch, payments, QR IDs and live tracking are not implemented. This repository has not been deployed as part of this work.
+
+
+## Expanded online, food and doorstep services
+
+The catalogue now includes dedicated discovery categories for healthy breakfast, lunch and dinner delivery; tiffin and meal subscriptions; fresh vegetables and fruits; farm produce; Ayurveda and traditional wellness; permitted Ayurvedic products; nutrition education; online exam and government-job coaching; school and college tuition; professional certifications; language learning; career and interview preparation; online yoga and fitness; remote consulting; IT support; software development; design and digital marketing; writing and translation; virtual assistance; webinars; online bookings; and lawful digital products. It also includes laundry, ironing, water-purifier maintenance, home painting/deep-clean packages and catering.
+
+Food listings must disclose ingredients and allergens, fulfil food-safety registration and hygiene requirements, show preparation/delivery estimates and support complaint/refund processes. Healthy-food labels must not imply medical benefits without lawful substantiation. Ayurveda-related clinical consultations and medicinal products require practitioner, product and seller checks under the applicable country's rules; the platform must not promise cures or recommend stopping prescribed treatment. Coaching providers must describe course outcomes honestly and must not guarantee exam selection, employment or credentials. Digital goods require clear ownership/licensing and prohibited-content controls.
+
+Online services should support remote delivery modes (live session, scheduled consultation, downloadable deliverable, or ongoing subscription), provider identity and qualification checks appropriate to the service, clear scope/pricing, time zones, cancellation/refund rules, and secure in-platform communication. These are catalogue and product requirements; the services are not live until the relevant modules, providers and local launch checks are completed.
