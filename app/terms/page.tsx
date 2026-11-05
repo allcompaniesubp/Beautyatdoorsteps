@@ -14,6 +14,6 @@ export default function TermsPage() {
     <h1>Terms of Use</h1>
     <p><strong>Preview notice:</strong> This page is a draft summary for product planning, not final legal terms or legal advice. The full terms must be reviewed by qualified counsel and adapted for each launch country before the platform accepts real users or transactions.</p>
     {sections.map(([heading, body]) => <section key={heading} style={{ marginTop: 28 }}><h2>{heading}</h2><p>{body}</p></section>)}
-    <section style={{ marginTop: 32 }}><h2>Full draft and launch review</h2><p>The detailed draft, including accounts, third-party listings, payments, refunds, content, safety, liability and complaints, is maintained in the project documentation. It is not yet approved for publication.</p><p><Link href="/">Return to marketplace</Link></p></section>
+    <section style={{ marginTop: 32 }}><h2>Full draft documents</h2><p><a href="https://github.com/allcompaniesubp/Beautyatdoorsteps/blob/main/docs/TERMS_AND_CONDITIONS.md">Read the full customer Terms and Conditions draft</a></p><p><a href="https://github.com/allcompaniesubp/Beautyatdoorsteps/blob/main/docs/PROVIDER_AND_MERCHANT_TERMS.md">Read the provider, merchant and business listing terms draft</a></p><p>These documents are not approved for publication. Country-specific legal review and the actual operator details are still required.</p><p><Link href="/">Return to marketplace</Link></p></section>
   </main>;
 }
