@@ -15,6 +15,10 @@ const groups = [
   { title: "Doctors & healthcare", icon: Stethoscope, description: "Find approved healthcare providers and teleconsultation services where enabled." },
   { title: "Government & public services", icon: Landmark, description: "Find official portals, public schemes, civic services and government information." },
   { title: "All businesses & local directory", icon: Store, description: "Discover shops, companies, offices, manufacturers and service providers." },
+  { title: "Healthy meals & fresh produce", icon: ShoppingBasket, description: "Explore breakfast, lunch, dinner, tiffin plans, fruits and vegetables from local sellers." },
+  { title: "Online learning & coaching", icon: BriefcaseBusiness, description: "Find exam preparation, job coaching, tutoring, languages and professional courses." },
+  { title: "Online professional services", icon: Globe2, description: "Discover remote consulting, IT support, design, writing, translation and virtual assistance." },
+  { title: "Ayurveda & wellness", icon: Stethoscope, description: "Explore qualified wellness practitioners and permitted products subject to local safeguards." },
 ];
 
 export default function Home() {
