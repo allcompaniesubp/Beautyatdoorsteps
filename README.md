@@ -4,7 +4,9 @@ A mobile-first Next.js starter for an international home grooming and beauty mar
 
 ## Included in this first preview
 
-- Brand homepage and service categories
+- Brand homepage and 51-category global directory/marketplace catalogue, including legal, healthcare, government-information, private-business and local-services discovery
+- Terms of Use and Privacy Information preview routes (`/terms` and `/privacy`), clearly marked as drafts
+- Draft customer terms, privacy framework, regulated-services register and global marketplace blueprint in `docs/`
 - Responsive customer-facing landing page
 - Professional application form
 - Local photo preview
@@ -18,6 +20,9 @@ This is a frontend starter, not a production marketplace. The application form c
 The sample application number is intentionally a demo value. It is not a globally unique or official ID.
 
 Before real users are onboarded, implement:
+- Database-backed business directory, listing claims, search, location filters, official-source freshness and moderation
+- Separate provider/merchant terms, country-specific terms, refund/cancellation policy, healthcare consent and legal-professional compliance workflows
+- Government directory editorial review; official API connections only after each programme approves the organisation and credentials
 - Supabase authentication, database, private storage and row-level security
 - Server-side validation, audit logs, rate limits and secure admin roles
 - Consent-based location sharing only during active jobs
