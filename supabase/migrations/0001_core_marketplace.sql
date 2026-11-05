@@ -215,6 +215,7 @@ as $$
 begin
   insert into public.profiles (id, display_name)
   values (new.id, coalesce(new.raw_user_meta_data ->> 'display_name', ''));
+  insert into public.user_roles (user_id, role) values (new.id, 'customer');
   return new;
 end;
 $$;
@@ -222,6 +223,55 @@ $$;
 create trigger on_auth_user_created
 after insert on auth.users
 for each row execute procedure public.handle_new_user();
+
+-- Keep moderation and activation fields under trusted server-side control.
+create or replace function public.guard_marketplace_moderation_fields()
+returns trigger
+language plpgsql
+set search_path = ''
+as $
+begin
+  if coalesce(auth.role(), '') <> 'service_role' then
+    if tg_table_name = 'provider_profiles' then
+      new.review_status := 'pending';
+      new.reviewed_at := null;
+      new.reviewed_by := null;
+    elsif tg_table_name = 'merchant_profiles' then
+      new.review_status := 'pending';
+    elsif tg_table_name = 'product_listings' or tg_table_name = 'property_listings' then
+      new.review_status := 'pending';
+    elsif tg_table_name = 'provider_services' then
+      new.active := false;
+    end if;
+  end if;
+  return new;
+end;
+$;
+
+create trigger guard_provider_review before insert or update on public.provider_profiles
+for each row execute function public.guard_marketplace_moderation_fields();
+create trigger guard_merchant_review before insert or update on public.merchant_profiles
+for each row execute function public.guard_marketplace_moderation_fields();
+create trigger guard_product_review before insert or update on public.product_listings
+for each row execute function public.guard_marketplace_moderation_fields();
+create trigger guard_property_review before insert or update on public.property_listings
+for each row execute function public.guard_marketplace_moderation_fields();
+create trigger guard_provider_service_activation before insert or update on public.provider_services
+for each row execute function public.guard_marketplace_moderation_fields();
+
+-- Private identity and qualification documents: no public bucket or public URL.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('private-provider-documents', 'private-provider-documents', false, 10485760,
+        array['image/jpeg','image/png','application/pdf'])
+on conflict (id) do nothing;
+
+create policy "provider owns private document objects"
+on storage.objects for select to authenticated
+using (bucket_id = 'private-provider-documents' and (storage.foldername(name))[1] = (select auth.uid())::text);
+
+create policy "provider uploads own private document objects"
+on storage.objects for insert to authenticated
+with check (bucket_id = 'private-provider-documents' and (storage.foldername(name))[1] = (select auth.uid())::text);
 
 -- Enable RLS on all user/business data.
 alter table public.profiles enable row level security;
@@ -256,7 +306,7 @@ create policy "provider read approved or own" on public.provider_profiles for se
 create policy "provider create own" on public.provider_profiles for insert to authenticated with check (user_id = (select auth.uid()));
 create policy "provider document owner read" on public.provider_documents for select to authenticated using (exists (select 1 from public.provider_profiles p where p.id = provider_id and p.user_id = (select auth.uid())));
 create policy "provider document owner insert" on public.provider_documents for insert to authenticated with check (exists (select 1 from public.provider_profiles p where p.id = provider_id and p.user_id = (select auth.uid())));
-create policy "provider services read active or own" on public.provider_services for select to anon, authenticated using (active = true or exists (select 1 from public.provider_profiles p where p.id = provider_id and p.user_id = (select auth.uid())));
+create policy "provider services read active or own" on public.provider_services for select to anon, authenticated using ((active = true and exists (select 1 from public.provider_profiles p where p.id = provider_id and p.review_status = 'approved')) or exists (select 1 from public.provider_profiles p where p.id = provider_id and p.user_id = (select auth.uid())));
 create policy "provider services create own" on public.provider_services for insert to authenticated with check (exists (select 1 from public.provider_profiles p where p.id = provider_id and p.user_id = (select auth.uid())));
 
 -- Merchants and product catalogues.
@@ -277,11 +327,13 @@ create policy "ride participant read" on public.ride_requests for select to auth
 create policy "ride customer create" on public.ride_requests for insert to authenticated with check (customer_id = (select auth.uid()));
 create policy "property public approved read" on public.property_listings for select to anon, authenticated using (review_status = 'approved' or listed_by = (select auth.uid()));
 create policy "property owner create" on public.property_listings for insert to authenticated with check (listed_by = (select auth.uid()));
-create policy "project buyer or bidder read" on public.project_requests for select to authenticated using (buyer_id = (select auth.uid()) or exists (select 1 from public.project_bids b where b.project_id = id and b.bidder_id = (select auth.uid())));
+create policy "project buyer or bidder read" on public.project_requests for select to authenticated using (buyer_id = (select auth.uid()));
 create policy "project buyer create" on public.project_requests for insert to authenticated with check (buyer_id = (select auth.uid()));
-create policy "project bid participant read" on public.project_bids for select to authenticated using (bidder_id = (select auth.uid()) or exists (select 1 from public.project_requests r where r.id = project_id and r.buyer_id = (select auth.uid())));
+create policy "project bid participant read" on public.project_bids for select to authenticated using (bidder_id = (select auth.uid()));
 create policy "project bidder create" on public.project_bids for insert to authenticated with check (bidder_id = (select auth.uid()));
 create policy "audit events owner read" on public.audit_events for select to authenticated using (actor_id = (select auth.uid()));
 
 -- Intentionally no client update/delete policies for review decisions, financial states,
 -- assigned providers/drivers, audit logs, or privileged moderation. Implement server-side.
+-- Admin review of project bids must use a trusted server-side endpoint (service role),
+-- not a client-side cross-table policy, to avoid recursive RLS evaluation.
