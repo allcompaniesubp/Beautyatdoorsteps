@@ -28,7 +28,7 @@ export default function Home() {
 
   return <main>
     <header className="topbar">
-      <a className="brand" href="#"><span className="brand-mark">B</span><span>beauty<span className="brand-accent">doorstep</span><small>ONE MARKETPLACE. EVERYDAY NEEDS.</small></span></a>
+      <a className="brand" href="#"><span className="brand-mark">D</span><span>Door<span className="brand-accent">Sphere</span><small>EVERYTHING. EVERYONE. WITHIN REACH.</small></span></a>
       <nav className="nav"><a href="#explore">Explore</a><a href="#how">How it works</a><a href="#safety">Trust & safety</a><a href="#partners">Become a partner</a><a className="nav-cta" href="#explore">Explore marketplace <ArrowRight size={16}/></a></nav>
     </header>
 
